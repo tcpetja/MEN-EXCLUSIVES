@@ -51,7 +51,8 @@ function Line({ line }: { line: CartLine }) {
             >
               <MinusIcon />
             </button>
-            <span className="tabular w-7 text-center text-body-sm" aria-label={`Quantity ${line.qty}`}>
+            <span className="tabular w-7 text-center text-body-sm">
+              <span className="sr-only">Quantity </span>
               {line.qty}
             </span>
             <button

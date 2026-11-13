@@ -282,7 +282,7 @@ for (const viewport of ACTIVE_VIEWPORTS) {
     await page.waitForTimeout(600);
     check(`bag${at}`, (await bag.locator("li").count()) === 1, "bag drawer opens with the suit in it");
     await bag.getByRole("button", { name: /Increase quantity/ }).click();
-    check(`bag${at}`, (await bag.getByLabel("Quantity 2").count()) === 1, "quantity increases to 2");
+    check(`bag${at}`, (await bag.getByText("Quantity 2").count()) === 1, "quantity increases to 2");
     check(`bag${at}`, (await bag.getByText("$3,700").count()) >= 1, "subtotal follows the quantity");
     await runAxe(page, `bag-drawer${at}`);
     await snap(page, `bag-drawer${at}`);
