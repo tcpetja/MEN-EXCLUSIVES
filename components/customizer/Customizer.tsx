@@ -41,9 +41,12 @@ function tieFor(color: string) {
 const tile =
   "relative flex cursor-pointer border border-line-strong rounded-control hover:border-gold-hi has-checked:border-gold has-checked:bg-graphite has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-gold-hi";
 
+/** The selected mark: a gold disc, so it reads on any cloth behind it. */
 function Check() {
   return (
-    <CheckIcon className="absolute top-2 right-2 text-gold opacity-0 peer-checked:opacity-100" width={18} height={18} />
+    <span className="absolute -top-1.5 -right-1.5 hidden size-5 items-center justify-center rounded-full bg-gold text-obsidian peer-checked:flex">
+      <CheckIcon width={14} height={14} strokeWidth={2} />
+    </span>
   );
 }
 
@@ -175,9 +178,7 @@ export function Customizer() {
                 />
                 <ClothSwatch cloth={cloth.id} color={s.color} pattern={s.pattern} className="size-full" />
                 <span className="sr-only">{s.name}</span>
-                <span className="absolute -top-1.5 -right-1.5 hidden size-5 items-center justify-center rounded-full bg-gold text-obsidian peer-checked:flex">
-                  <CheckIcon width={14} height={14} strokeWidth={2} />
-                </span>
+                <Check />
               </label>
             ))}
           </div>
