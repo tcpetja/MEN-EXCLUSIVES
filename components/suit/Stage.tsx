@@ -2,7 +2,7 @@
 
 import { Component, useRef, type ReactNode, type RefObject } from "react";
 import * as THREE from "three";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { Environment, Lightformer } from "@react-three/drei";
 import type { SuitConfig } from "./config";
 import { SuitModel } from "./SuitModel";
@@ -23,9 +23,8 @@ export function Rig({
   const rim = useRef<THREE.DirectionalLight>(null);
   const kicker = useRef<THREE.DirectionalLight>(null);
   const fill = useRef<THREE.HemisphereLight>(null);
-  const scene = useThree((s) => s.scene);
 
-  useFrame(({ camera }) => {
+  useFrame(({ camera, scene }) => {
     const s = stateRef.current;
     if (key.current) {
       key.current.intensity = s.key;

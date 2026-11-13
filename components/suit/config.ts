@@ -62,7 +62,7 @@ export const CLOTHS: Cloth[] = [
     id: "cashmere",
     name: "Cashmere",
     note: "Brushed pure cashmere. Soft shoulder, soft hand, warm without weight.",
-    selvedge: "Pure Cashmere · Inner Mongolia",
+    selvedge: "Pure Cashmere · Mongolia",
     weight: "340 g",
     fromPrice: 390000,
     shades: [
@@ -76,7 +76,7 @@ export const CLOTHS: Cloth[] = [
     id: "linen",
     name: "Linen",
     note: "Open plain weave with honest slubs. Cool in heat and better for every crease.",
-    selvedge: "Irish Linen · County Down",
+    selvedge: "Irish Linen · Co. Down",
     weight: "310 g",
     fromPrice: 210000,
     shades: [
@@ -90,7 +90,7 @@ export const CLOTHS: Cloth[] = [
     id: "velvet",
     name: "Velvet",
     note: "Cotton velvet with a deep pile. Drinks light at the centre, glows at the edge.",
-    selvedge: "Cotton Velvet · Como · Italy",
+    selvedge: "Cotton Velvet · Como",
     weight: "360 g",
     fromPrice: 280000,
     shades: [

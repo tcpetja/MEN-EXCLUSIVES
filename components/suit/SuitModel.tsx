@@ -9,11 +9,9 @@ import { cutSuit, disposeCut, getStaticParts, type ButtonPlacement } from "./geo
 
 const WHITE = new THREE.Color("#ffffff");
 
-function useDisposable<T extends { dispose(): void }>(factory: () => T, deps: unknown[]): T {
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const value = useMemo(factory, deps);
-  useEffect(() => () => value.dispose(), [value]);
-  return value;
+/** Frees a material when it is replaced or the suit unmounts. */
+function useDispose(resource: { dispose(): void }) {
+  useEffect(() => () => resource.dispose(), [resource]);
 }
 
 function Buttons({
@@ -58,7 +56,7 @@ export function SuitModel({ config, stand = true }: { config: SuitConfig; stand?
   );
   useEffect(() => () => disposeCut(cut), [cut]);
 
-  const cloth = useDisposable(() => {
+  const cloth = useMemo(() => {
     const surface = CLOTH_SURFACE[config.cloth];
     const textures = getClothTextures(
       config.cloth,
@@ -79,7 +77,7 @@ export function SuitModel({ config, stand = true }: { config: SuitConfig; stand?
     });
   }, [config.cloth, config.color, config.pattern, maxAnisotropy]);
 
-  const satin = useDisposable(
+  const satin = useMemo(
     () =>
       new THREE.MeshPhysicalMaterial({
         color: new THREE.Color(config.color).multiplyScalar(0.55),
@@ -93,12 +91,12 @@ export function SuitModel({ config, stand = true }: { config: SuitConfig; stand?
     [config.color],
   );
 
-  const shirt = useDisposable(
+  const shirt = useMemo(
     () => new THREE.MeshStandardMaterial({ color: "#e9e4d8", roughness: 0.82, side: THREE.DoubleSide }),
     [],
   );
 
-  const silk = useDisposable(
+  const silk = useMemo(
     () =>
       new THREE.MeshPhysicalMaterial({
         color: config.neckwearColor,
@@ -111,7 +109,7 @@ export function SuitModel({ config, stand = true }: { config: SuitConfig; stand?
     [config.neckwearColor],
   );
 
-  const buttonMaterial = useDisposable(
+  const buttonMaterial = useMemo(
     () =>
       config.buttonFinish === "gold"
         ? new THREE.MeshStandardMaterial({ color: "#d2b06c", metalness: 1, roughness: 0.46 })
@@ -124,15 +122,24 @@ export function SuitModel({ config, stand = true }: { config: SuitConfig; stand?
     [config.buttonFinish],
   );
 
-  const brass = useDisposable(
+  const brass = useMemo(
     () => new THREE.MeshStandardMaterial({ color: "#b8975a", metalness: 1, roughness: 0.4 }),
     [],
   );
-  const neck = useDisposable(
+  const neck = useMemo(
     () => new THREE.MeshStandardMaterial({ color: "#17181b", roughness: 0.9 }),
     [],
   );
-  const dark = useDisposable(() => new THREE.MeshBasicMaterial({ color: "#030303" }), []);
+  const dark = useMemo(() => new THREE.MeshBasicMaterial({ color: "#030303" }), []);
+
+  useDispose(cloth);
+  useDispose(satin);
+  useDispose(shirt);
+  useDispose(silk);
+  useDispose(buttonMaterial);
+  useDispose(brass);
+  useDispose(neck);
+  useDispose(dark);
 
   const facing = config.satinLapel ? satin : cloth;
   const frontButtonMaterial = config.satinLapel ? satin : buttonMaterial;

@@ -1,11 +1,11 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useFrame } from "@react-three/fiber";
 import { FLAGSHIP, type SuitConfig } from "@/components/suit/config";
 import { SuitCanvas, SuitScene } from "@/components/suit/Stage";
-import { STUDIO, STUDIO_CHEST, cloneStage, type StageState } from "@/components/suit/lighting";
+import { HERO_CHAPTERS, STUDIO, STUDIO_CHEST, cloneStage, type StageState } from "@/components/suit/lighting";
 
 function ReadyAfter({ frames, onReady }: { frames: number; onReady: () => void }) {
   const count = useRef(0);
@@ -43,19 +43,25 @@ export function StudioView() {
     pocketSquare: pick("pocketSquare"),
   };
 
-  const view = params.get("view") === "chest" ? STUDIO_CHEST : STUDIO;
-  const state = cloneStage(view);
+  const viewName = params.get("view");
   const yaw = params.get("yaw");
-  if (yaw !== null) state.yaw = (Number(yaw) * Math.PI) / 180;
   const dist = params.get("dist");
-  if (dist !== null) state.camera[2] = Number(dist);
   const camY = params.get("camY");
-  if (camY !== null) {
-    state.camera[1] = Number(camY);
-    state.target[1] = Number(camY) - 0.04;
-  }
+  const state = useMemo(() => {
+    const view = viewName === "chest" ? STUDIO_CHEST : viewName === "hero" ? HERO_CHAPTERS[0] : STUDIO;
+    const next = cloneStage(view);
+    if (yaw !== null) next.yaw = (Number(yaw) * Math.PI) / 180;
+    if (dist !== null) next.camera[2] = Number(dist);
+    if (camY !== null) {
+      next.camera[1] = Number(camY);
+      next.target[1] = Number(camY) - 0.04;
+    }
+    return next;
+  }, [viewName, yaw, dist, camY]);
   const stateRef = useRef<StageState>(state);
-  stateRef.current = state;
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
 
   return (
     <div
@@ -69,7 +75,8 @@ export function StudioView() {
             : "radial-gradient(60% 55% at 50% 42%, rgb(200 167 102 / 0.11), transparent 70%)",
       }}
     >
-      <SuitCanvas frameloop="always">
+      {/* render continuously until the first frames are out, then hold still */}
+      <SuitCanvas frameloop={ready ? "demand" : "always"}>
         <SuitScene config={config} stateRef={stateRef} stand={params.get("stand") !== "0"} />
         <ReadyAfter frames={6} onReady={() => setReady(true)} />
       </SuitCanvas>

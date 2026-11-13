@@ -32,7 +32,7 @@ export const LIGHT_COLORS = {
 
 export const STUDIO: StageState = {
   yaw: -0.38,
-  camera: [0, 0.44, 2.95],
+  camera: [0, 0.43, 2.5],
   target: [0, 0.37, 0],
   key: 3.4,
   keyPos: [1.5, 1.7, 2.6],
@@ -54,7 +54,7 @@ export const HERO_CHAPTERS: StageState[] = [
   // Silhouette: the suit emerges from the dark, edge-lit
   {
     yaw: -0.62,
-    camera: [0, 0.46, 3.05],
+    camera: [0, 0.45, 2.5],
     target: [0, 0.36, 0],
     key: 0.5,
     keyPos: [1.9, 1.5, 1.6],
@@ -65,9 +65,9 @@ export const HERO_CHAPTERS: StageState[] = [
   },
   // Cloth: close on the chest, a raking key that shows the weave
   {
-    yaw: -0.2,
-    camera: [0.03, 0.57, 1.02],
-    target: [0.04, 0.55, 0],
+    yaw: -0.32,
+    camera: [-0.06, 0.57, 1.12],
+    target: [-0.08, 0.55, 0],
     key: 4.4,
     keyPos: [2.6, 0.9, 1.5],
     rim: 2.5,
@@ -78,8 +78,8 @@ export const HERO_CHAPTERS: StageState[] = [
   // Cut: turned to show shoulder, sleeve and waist under a cool profile light
   {
     yaw: 1.32,
-    camera: [0, 0.48, 2.5],
-    target: [0, 0.4, 0],
+    camera: [0, 0.47, 2.2],
+    target: [0, 0.38, 0],
     key: 1.3,
     keyPos: [-1.6, 1.8, 2.2],
     rim: 8,
@@ -90,8 +90,8 @@ export const HERO_CHAPTERS: StageState[] = [
   // Finish: square to the customer, full warm key
   {
     yaw: Math.PI * 2 - 0.3,
-    camera: [0, 0.44, 2.95],
-    target: [0, 0.37, 0],
+    camera: [0, 0.45, 2.5],
+    target: [0, 0.36, 0],
     key: 3.6,
     keyPos: [1.5, 1.7, 2.6],
     rim: 5,

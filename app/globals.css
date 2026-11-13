@@ -280,3 +280,8 @@
     scroll-behavior: auto;
   }
 }
+
+/* A modal dialog locks the page behind it. */
+html:has(dialog[open]) {
+  overflow: hidden;
+}
