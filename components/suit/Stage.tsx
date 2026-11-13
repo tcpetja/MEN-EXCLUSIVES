@@ -104,7 +104,7 @@ export function SuitCanvas({
   return (
     <Canvas
       className={className}
-      shadows="soft"
+      shadows="percentage"
       frameloop={frameloop}
       dpr={[1, 1.75]}
       camera={{ fov: 26, near: 0.1, far: 30, position: [0, 0.44, 2.95] }}

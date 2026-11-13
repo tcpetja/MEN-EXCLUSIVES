@@ -18,6 +18,16 @@ export async function generateMetadata({ params }: PageProps<"/collection/[slug]
   return { title: product.name, description: product.blurb };
 }
 
+/**
+ * Every suit is prerendered from generateStaticParams and the whole page must
+ * be static. For an address that was not prerendered, Next.js then waits for
+ * the full result instead of serving a fallback shell, so an unknown suit
+ * answers with a real 404 rather than a not-found message under a 200.
+ * The slug is read up front by design, hence `instant = false`.
+ */
+export const ensureStatic = "navigation";
+export const instant = false;
+
 export default async function ProductPage({ params }: PageProps<"/collection/[slug]">) {
   const product = getProduct((await params).slug);
   if (!product) notFound();
@@ -102,7 +112,7 @@ export default async function ProductPage({ params }: PageProps<"/collection/[sl
           <ul className="mt-10 grid gap-x-6 gap-y-14 sm:grid-cols-2 xl:grid-cols-3">
             {related.map((p) => (
               <li key={p.slug}>
-                <ProductCard product={p} />
+                <ProductCard product={p} heading="h3" />
               </li>
             ))}
           </ul>

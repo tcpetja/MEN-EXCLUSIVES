@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { AlertIcon, CheckIcon, Spinner } from "@/components/ui/Icons";
 import { button } from "@/components/ui/button";
 import {
@@ -26,10 +26,10 @@ type Details = { name: string; email: string; phone: string; notes: string };
 type SlotResult = Slot[] | "error";
 
 const tile =
-  "relative flex cursor-pointer rounded-control border border-line-strong transition-[border-color,background-color] duration-150 ease-press hover:border-gold-hi has-checked:border-gold has-checked:bg-graphite has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-gold-hi";
+  "relative flex cursor-pointer rounded-control border border-line-strong hover:border-gold-hi has-checked:border-gold has-checked:bg-graphite has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-gold-hi";
 
 const field =
-  "mt-2 block w-full rounded-control border border-line-strong bg-graphite px-4 text-body text-chalk placeholder:text-ash/70 transition-colors duration-150 ease-press hover:border-chalk focus-visible:border-gold-hi aria-invalid:border-ember";
+  "mt-2 block w-full rounded-control border border-line-strong bg-graphite px-4 text-body text-chalk placeholder:text-ash/70 hover:border-chalk focus-visible:border-gold-hi aria-invalid:border-ember";
 
 /** Today's date where the visitor is, known only in the browser. */
 function useToday() {
@@ -90,10 +90,13 @@ export function BookingFlow() {
   const [submit, setSubmit] = useState<{ state: "idle" | "sending" } | { state: "failed"; message: string; conflict: boolean }>({ state: "idle" });
   const [confirmed, setConfirmed] = useState<{ reference: string; date: string; time: string; service: string; name: string } | null>(null);
 
-  const max = today ? toISODate(new Date(dateFromISO(today).getTime() + BOOKING_WINDOW_DAYS * 86_400_000)) : null;
+  // Appointments open from tomorrow, so a time that has already passed is never offered.
+  const addDays = (iso: string, days: number) => toISODate(new Date(dateFromISO(iso).getTime() + days * 86_400_000));
+  const min = today ? addDays(today, 1) : null;
+  const max = today ? addDays(today, BOOKING_WINDOW_DAYS) : null;
   const rawDate = params.get("date");
   const date =
-    rawDate && today && max && /^\d{4}-\d{2}-\d{2}$/.test(rawDate) && rawDate >= today && rawDate <= max && isOpenDay(dateFromISO(rawDate))
+    rawDate && min && max && /^\d{4}-\d{2}-\d{2}$/.test(rawDate) && rawDate >= min && rawDate <= max && isOpenDay(dateFromISO(rawDate))
       ? rawDate
       : null;
   const slotKey = service && date ? `${service.id}:${date}` : null;
@@ -231,7 +234,7 @@ export function BookingFlow() {
   if (confirmed) {
     return (
       <div className="mt-10">
-        <h2 ref={heading} tabIndex={-1} className="type-display text-center text-display-md outline-none">
+        <h2 ref={heading} tabIndex={-1} className="type-display text-center text-display-md">
           Your Appointment Is Confirmed
         </h2>
         <p className="mx-auto mt-3 mb-10 max-w-[48ch] text-center text-body text-ash">
@@ -294,19 +297,18 @@ export function BookingFlow() {
         </ol>
       </nav>
 
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.div
-          key={step}
-          initial={{ opacity: 0, x: 24 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -24 }}
-          transition={{ duration: 0.28, ease: [0.2, 0.7, 0.1, 1] }}
-          className="mt-10"
-        >
+      {/* The new step mounts at once (so focus can move to it) and eases in. */}
+      <motion.div
+        key={step}
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.42, ease: [0.2, 0.7, 0.1, 1] }}
+        className="mt-10"
+      >
           {step === 1 && (
             <fieldset>
               <legend>
-                <h2 ref={heading} tabIndex={-1} className="type-display text-display-md outline-none">
+                <h2 ref={heading} tabIndex={-1} className="type-display text-display-md">
                   What Do You Need?
                 </h2>
               </legend>
@@ -345,7 +347,7 @@ export function BookingFlow() {
 
           {step === 2 && service && (
             <div>
-              <h2 ref={heading} tabIndex={-1} className="type-display text-display-md outline-none">
+              <h2 ref={heading} tabIndex={-1} className="type-display text-display-md">
                 Choose a Date &amp; Time
               </h2>
               <p className="tabular mt-2 text-body-sm text-ash">
@@ -353,10 +355,11 @@ export function BookingFlow() {
               </p>
               <div className="mt-6 grid gap-10 md:grid-cols-2">
                 <div>
-                  {today && max ? (
+                  {today && min && max ? (
                     <Calendar
                       value={date}
-                      min={today}
+                      today={today}
+                      min={min}
                       max={max}
                       onChange={(iso) => {
                         setStepError(null);
@@ -432,7 +435,7 @@ export function BookingFlow() {
                 next();
               }}
             >
-              <h2 ref={heading} tabIndex={-1} className="type-display text-display-md outline-none">
+              <h2 ref={heading} tabIndex={-1} className="type-display text-display-md">
                 Your Details
               </h2>
               <p className="mt-2 text-body-sm text-ash">We use these only to hold and confirm your appointment.</p>
@@ -523,12 +526,12 @@ export function BookingFlow() {
 
           {step === 4 && service && date && time && (
             <div>
-              <h2 ref={heading} tabIndex={-1} className="type-display text-display-md outline-none">
+              <h2 ref={heading} tabIndex={-1} className="type-display text-display-md">
                 Review Your Appointment
               </h2>
               <dl className="mt-6 border-t border-line">
                 {[
-                  { term: "Appointment", value: `${service.name}, ${service.minutes} min`, to: 1 },
+                  { term: "Appointment", value: `${service.name}, ${service.minutes}\u00a0min`, to: 1 },
                   { term: "Date & time", value: `${formatLongDate(date)} at ${formatTime(time)}`, to: 2 },
                   { term: "Name", value: details.name, to: 3 },
                   { term: "Contact", value: `${details.email}, ${details.phone}`, to: 3 },
@@ -555,8 +558,7 @@ export function BookingFlow() {
               </p>
             </div>
           )}
-        </motion.div>
-      </AnimatePresence>
+      </motion.div>
 
       <div aria-live="polite">
         {stepError && <Inline>{stepError}</Inline>}

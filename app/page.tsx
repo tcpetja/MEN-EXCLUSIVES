@@ -40,7 +40,7 @@ export default function Home() {
                   color={cloth.shades[0].color}
                   pattern={cloth.shades[0].pattern}
                   pinked
-                  className="aspect-[4/3] w-full transition-[filter] duration-150 ease-press group-hover:brightness-125"
+                  className="aspect-[4/3] w-full group-hover:brightness-125"
                 />
                 <h3 className="type-display mt-4 text-display-sm text-chalk group-hover:text-gold-hi">
                   {cloth.name}

@@ -4,7 +4,16 @@ import { getCloth } from "@/components/suit/config";
 import { formatPrice } from "@/lib/format";
 import { PRODUCT_IMAGE_SIZE, getLine, productImage, type Product } from "@/lib/products";
 
-export function ProductCard({ product, priority = false }: { product: Product; priority?: boolean }) {
+export function ProductCard({
+  product,
+  priority = false,
+  heading: Heading = "h2",
+}: {
+  product: Product;
+  priority?: boolean;
+  /** Heading level for the suit's name: h2 in a page-level grid, h3 inside a titled section. */
+  heading?: "h2" | "h3";
+}) {
   return (
     <Link href={`/collection/${product.slug}`} className="group block">
       <div className="overflow-hidden bg-basalt">
@@ -21,9 +30,9 @@ export function ProductCard({ product, priority = false }: { product: Product; p
       <div className="mt-4 flex items-start justify-between gap-4">
         <div className="min-w-0">
           <p className="type-label text-gold">{getLine(product.line).name}</p>
-          <h3 className="type-display mt-1 text-display-sm text-chalk group-hover:text-gold-hi">
+          <Heading className="type-display mt-1 text-display-sm text-chalk group-hover:text-gold-hi">
             {product.name}
-          </h3>
+          </Heading>
           <p className="mt-1 text-body-sm text-ash">{getCloth(product.suit.cloth).name}</p>
         </div>
         <p className="tabular pt-5 text-body text-chalk">{formatPrice(product.price)}</p>

@@ -16,8 +16,8 @@ export default function CollectionPage() {
       <div className="grid gap-6 pb-12 md:grid-cols-[1fr_1.2fr] md:items-end">
         <h1 className="type-display text-display-lg">The Collection</h1>
         <p className="max-w-[58ch] text-body-lg text-ash">
-          12 suits across 4 lines, cut on the house block and ready to wear in 21 sizes. Each is
-          photographed from the same model you can restyle in the customizer.
+          12 suits across 4 lines, cut on the house block and ready to wear in 21 sizes. Every one
+          can be altered at the atelier before it leaves.
         </p>
       </div>
       {/* The full grid is the static fallback; filters apply once the URL is known. */}

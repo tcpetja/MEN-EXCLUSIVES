@@ -15,7 +15,7 @@ export async function GET(request: Request) {
   const today = new Date();
   const start = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
   const daysAhead = Math.round((day.getTime() - start) / 86_400_000);
-  // a day of slack either side, because the visitor's "today" may differ from the server's
+  // bookable from tomorrow; a day of slack either side because the visitor's "today" may differ from the server's
   const bookable = isOpenDay(day) && daysAhead >= 0 && daysAhead <= BOOKING_WINDOW_DAYS + 1;
 
   return Response.json(

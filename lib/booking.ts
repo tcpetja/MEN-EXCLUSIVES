@@ -32,7 +32,7 @@ export function getService(id: string | null | undefined) {
   return SERVICES.find((s) => s.id === id);
 }
 
-/** The atelier opens Monday to Saturday and takes bookings up to 60 days ahead. */
+/** The atelier opens Monday to Saturday and takes bookings from tomorrow, up to 60 days ahead. */
 export const OPEN_HOUR = 10;
 export const CLOSE_HOUR = 18;
 export const BOOKING_WINDOW_DAYS = 60;

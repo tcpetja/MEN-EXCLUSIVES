@@ -39,7 +39,7 @@ function tieFor(color: string) {
 }
 
 const tile =
-  "relative flex cursor-pointer border border-line-strong rounded-control transition-[border-color,background-color] duration-150 ease-press hover:border-gold-hi has-checked:border-gold has-checked:bg-graphite has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-gold-hi";
+  "relative flex cursor-pointer border border-line-strong rounded-control hover:border-gold-hi has-checked:border-gold has-checked:bg-graphite has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-gold-hi";
 
 function Check() {
   return (

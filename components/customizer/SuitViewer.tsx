@@ -2,14 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 import { invalidate, useFrame } from "@react-three/fiber";
-import { useReducedMotion } from "framer-motion";
 import type { SuitConfig } from "@/components/suit/config";
 import { SuitCanvas, SuitScene, WebGLBoundary, webglAvailable } from "@/components/suit/Stage";
+import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
 import { STUDIO, STUDIO_CHEST, cloneStage, mixStage, type StageState } from "@/components/suit/lighting";
 
 const ANGLES = [
   { id: "front", name: "Front", yaw: 0 },
-  { id: "quarter", name: "Three-Quarter", yaw: -0.5 },
   { id: "side", name: "Side", yaw: -Math.PI / 2 },
   { id: "back", name: "Back", yaw: Math.PI },
 ] as const;
@@ -62,7 +61,7 @@ export default function SuitViewer({
   const [angle, setAngle] = useState<string | null>(null);
   const [detail, setDetail] = useState(false);
   const [canRender, setCanRender] = useState<boolean | null>(null);
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = usePrefersReducedMotion();
 
   useEffect(() => {
     // WebGL can only be probed in the browser, after hydration
@@ -80,12 +79,15 @@ export default function SuitViewer({
 
   if (canRender === false) return <>{fallback}</>;
 
+  const toggle =
+    "type-label h-11 px-3 text-ash hover:text-gold-hi aria-pressed:text-gold-hi aria-pressed:underline aria-pressed:decoration-gold aria-pressed:underline-offset-8";
+
   return (
-    <div className="relative h-full w-full">
+    <div className="flex h-full w-full flex-col">
       <div
         role="img"
         aria-label={`Your suit: ${description}. Drag to turn it, or use the angle buttons.`}
-        className="absolute inset-0 cursor-grab touch-pan-y select-none active:cursor-grabbing"
+        className="relative min-h-0 flex-1 cursor-grab touch-pan-y select-none active:cursor-grabbing"
         onPointerDown={(e) => {
           drag.current = { x: e.clientX, yaw: yawTarget.current };
           e.currentTarget.setPointerCapture(e.pointerId);
@@ -102,14 +104,15 @@ export default function SuitViewer({
         {canRender && (
           <WebGLBoundary fallback={fallback}>
             <SuitCanvas>
-              <Turntable stateRef={stateRef} yawTarget={yawTarget} detail={detail} instant={Boolean(reduceMotion)} />
+              <Turntable stateRef={stateRef} yawTarget={yawTarget} detail={detail} instant={reduceMotion} />
               <SuitScene config={config} stateRef={stateRef} stand={false} />
             </SuitCanvas>
           </WebGLBoundary>
         )}
       </div>
 
-      <div className="absolute inset-x-0 bottom-0 flex flex-wrap items-center justify-center gap-x-1 gap-y-0 bg-linear-to-t from-obsidian to-transparent px-3 pt-8 pb-2">
+      {/* a solid strip, so the labels never sit on top of the cloth */}
+      <div className="flex shrink-0 items-center justify-center gap-x-1 border-t border-line bg-obsidian px-3">
         <div role="group" aria-label="View angle" className="flex">
           {ANGLES.map((a) => (
             <button
@@ -117,19 +120,14 @@ export default function SuitViewer({
               type="button"
               onClick={() => turnTo(a.id, a.yaw)}
               aria-pressed={angle === a.id}
-              className="type-label h-11 px-3 text-ash transition-colors duration-150 ease-press hover:text-gold-hi aria-pressed:text-gold-hi aria-pressed:underline aria-pressed:decoration-gold aria-pressed:underline-offset-8"
+              className={toggle}
             >
               {a.name}
             </button>
           ))}
         </div>
-        <span aria-hidden="true" className="mx-1 hidden h-4 w-px bg-line-strong sm:block" />
-        <button
-          type="button"
-          onClick={() => setDetail((d) => !d)}
-          aria-pressed={detail}
-          className="type-label h-11 px-3 text-ash transition-colors duration-150 ease-press hover:text-gold-hi aria-pressed:text-gold-hi aria-pressed:underline aria-pressed:decoration-gold aria-pressed:underline-offset-8"
-        >
+        <span aria-hidden="true" className="mx-1 h-4 w-px bg-line-strong" />
+        <button type="button" onClick={() => setDetail((d) => !d)} aria-pressed={detail} className={toggle}>
           Close-Up
         </button>
       </div>

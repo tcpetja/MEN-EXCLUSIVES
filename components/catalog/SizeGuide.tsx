@@ -42,7 +42,7 @@ export function SizeGuide({ open, onClose }: { open: boolean; onClose: () => voi
             {(["in", "cm"] as const).map((u) => (
               <label
                 key={u}
-                className="type-label flex h-11 min-w-16 cursor-pointer items-center justify-center rounded-control border border-line-strong px-3 text-chalk transition-colors duration-150 ease-press hover:border-gold-hi has-checked:border-gold has-checked:bg-graphite has-checked:text-gold-hi has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-gold-hi"
+                className="type-label flex h-11 min-w-16 cursor-pointer items-center justify-center rounded-control border border-line-strong px-3 text-chalk hover:border-gold-hi has-checked:border-gold has-checked:bg-graphite has-checked:text-gold-hi has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-gold-hi"
               >
                 <input
                   type="radio"

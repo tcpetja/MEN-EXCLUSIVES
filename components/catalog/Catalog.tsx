@@ -17,7 +17,7 @@ const SORTS = [
 type SortId = (typeof SORTS)[number]["id"];
 
 const chip =
-  "type-label inline-flex h-11 items-center gap-2 rounded-control border border-line-strong px-4 text-chalk transition-[color,border-color,background-color] duration-150 ease-press hover:border-gold-hi hover:text-gold-hi aria-[current=true]:border-gold aria-[current=true]:bg-graphite aria-[current=true]:text-gold-hi";
+  "type-label inline-flex h-11 items-center gap-2 rounded-control border border-line-strong px-4 text-chalk hover:border-gold-hi hover:text-gold-hi aria-[current=true]:border-gold aria-[current=true]:bg-graphite aria-[current=true]:text-gold-hi";
 
 /**
  * The collection with its filters. Every filter is a link, so the URL always
@@ -105,7 +105,7 @@ export function Catalog() {
                 scroll={false}
                 replace
                 aria-current={sort === s.id ? "true" : undefined}
-                className="type-label flex h-11 items-center px-2 text-ash transition-colors duration-150 ease-press hover:text-gold-hi aria-[current=true]:text-gold-hi aria-[current=true]:underline aria-[current=true]:decoration-gold aria-[current=true]:underline-offset-8"
+                className="type-label flex h-11 items-center px-2 text-ash hover:text-gold-hi aria-[current=true]:text-gold-hi aria-[current=true]:underline aria-[current=true]:decoration-gold aria-[current=true]:underline-offset-8"
               >
                 {s.name}
               </Link>

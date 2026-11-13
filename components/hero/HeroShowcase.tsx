@@ -6,9 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   motion,
-  useMotionValue,
   useMotionValueEvent,
-  useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
@@ -16,6 +14,7 @@ import {
 } from "framer-motion";
 import { WebGLBoundary, webglAvailable } from "@/components/suit/Stage";
 import { button } from "@/components/ui/button";
+import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
 
 const HeroScene = dynamic(() => import("./HeroScene"), { ssr: false });
 
@@ -113,16 +112,15 @@ function Chapter({
 
 export function HeroShowcase() {
   const track = useRef<HTMLElement>(null);
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = usePrefersReducedMotion();
   const [canRender, setCanRender] = useState<boolean | null>(null);
   const [ready, setReady] = useState(false);
   const [active, setActive] = useState(0);
 
   const { scrollYProgress } = useScroll({ target: track, offset: ["start start", "end end"] });
-  const smooth = useSpring(scrollYProgress, { stiffness: 90, damping: 24, restDelta: 0.0004 });
-  // under reduced motion nothing follows the scroll: hold the finished pose
-  const still = useMotionValue(1);
-  const progress = reduceMotion ? still : smooth;
+  // Under reduced motion nothing follows the scroll: CSS unpins the hero and
+  // shows every chapter, and the scene holds its finished pose.
+  const progress = useSpring(scrollYProgress, { stiffness: 90, damping: 24, restDelta: 0.0004 });
 
   useEffect(() => {
     // WebGL can only be probed in the browser, after hydration
@@ -171,20 +169,20 @@ export function HeroShowcase() {
       <div className="sticky top-header h-[calc(100svh-var(--spacing-header))] overflow-hidden motion-reduce:static motion-reduce:h-auto motion-reduce:overflow-visible">
         {/* stage */}
         <div
-          className="absolute inset-0 motion-reduce:relative motion-reduce:h-[72svh]"
+          className="absolute inset-0 overflow-hidden motion-reduce:relative motion-reduce:h-[72svh]"
           role="img"
           aria-label="The flagship suit on a tailor’s form: obsidian wool with peak lapels, a gold silk tie and brushed gold buttons. It turns and the light changes as you scroll."
         >
-          <div className="absolute inset-0 bg-[radial-gradient(48%_52%_at_50%_30%,rgb(200_167_102/0.12),transparent_72%)] md:bg-[radial-gradient(34%_58%_at_70%_44%,rgb(200_167_102/0.12),transparent_72%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(48%_52%_at_50%_30%,rgb(200_167_102/0.12),transparent_72%)] md:bg-[radial-gradient(34%_58%_at_70%_44%,rgb(200_167_102/0.12),transparent_72%)] motion-reduce:bg-[radial-gradient(40%_56%_at_50%_44%,rgb(200_167_102/0.12),transparent_72%)]" />
           <div
-            className={`absolute inset-0 flex -translate-y-[14%] justify-center transition-opacity duration-700 ease-press md:translate-x-[20%] md:translate-y-0 ${ready ? "opacity-0" : "opacity-100"}`}
+            className={`absolute inset-0 flex -translate-y-[14%] justify-center transition-opacity duration-700 ease-press md:translate-x-[20%] md:translate-y-0 motion-reduce:translate-none ${ready ? "opacity-0" : "opacity-100"}`}
           >
             {poster}
           </div>
           {canRender && (
             <WebGLBoundary fallback={null}>
               <div className={`absolute inset-0 transition-opacity duration-700 ease-press ${ready ? "opacity-100" : "opacity-0"}`}>
-                <HeroScene progress={progress} onReady={() => setReady(true)} />
+                <HeroScene progress={progress} still={reduceMotion} onReady={() => setReady(true)} />
               </div>
             </WebGLBoundary>
           )}
@@ -211,7 +209,7 @@ export function HeroShowcase() {
                   type="button"
                   onClick={() => goTo(i)}
                   aria-current={active === i ? "step" : undefined}
-                  className="group type-label flex h-11 items-center gap-3 text-ash transition-colors duration-150 ease-press hover:text-gold-hi aria-[current=step]:text-chalk"
+                  className="group type-label flex h-11 items-center gap-3 text-ash hover:text-gold-hi aria-[current=step]:text-chalk"
                 >
                   {chapter.rail}
                   <span

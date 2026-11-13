@@ -863,14 +863,15 @@ function placeCuffButtons(): ButtonPlacement[] {
 
 /** A shallow dished button, modelled lying flat with +y as its face. */
 export function buildButtonGeometry() {
+  // rim first, centre last: revolved in this order the faces point outward
   const profile = [
-    [0, 0.0034],
-    [0.5, 0.0031],
-    [0.78, 0.0024],
-    [0.9, 0.0036],
-    [1, 0.0026],
-    [1, 0.0004],
     [0.9, 0],
+    [1, 0.0004],
+    [1, 0.0026],
+    [0.9, 0.0036],
+    [0.78, 0.0024],
+    [0.5, 0.0031],
+    [0, 0.0034],
   ].map(([r, h]) => new THREE.Vector2(r, h));
   const g = new THREE.LatheGeometry(profile, 28);
   return g;

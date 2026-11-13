@@ -10,7 +10,7 @@ import { CHESTS, LENGTHS, type Chest, type LengthId, type Product } from "@/lib/
 import { SizeGuide } from "./SizeGuide";
 
 const chipBase =
-  "tabular relative flex h-12 cursor-pointer items-center justify-center rounded-control border border-line-strong text-body-sm text-chalk transition-[color,border-color,background-color] duration-150 ease-press hover:border-gold-hi has-checked:border-gold has-checked:bg-graphite has-checked:text-gold-hi has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-gold-hi has-disabled:cursor-not-allowed has-disabled:border-line has-disabled:text-ash has-disabled:line-through has-disabled:hover:border-line";
+  "tabular relative flex h-12 cursor-pointer items-center justify-center rounded-control border border-line-strong text-body-sm text-chalk hover:border-gold-hi has-checked:border-gold has-checked:bg-graphite has-checked:text-gold-hi has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-gold-hi has-disabled:cursor-not-allowed has-disabled:border-line has-disabled:text-ash has-disabled:line-through has-disabled:hover:border-line";
 
 export function PurchasePanel({ product }: { product: Product }) {
   const params = useSearchParams();

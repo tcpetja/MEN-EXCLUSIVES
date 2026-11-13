@@ -49,7 +49,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             Skip to Main Content
           </a>
           <Header />
-          <main id="main" tabIndex={-1} className="flex-1 outline-none">
+          <main id="main" tabIndex={-1} className="flex-1">
             {children}
           </main>
           <Footer />

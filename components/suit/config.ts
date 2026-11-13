@@ -49,7 +49,7 @@ export const CLOTHS: Cloth[] = [
     name: "Italian Wool",
     note: "Worsted twill from Biella. Holds a crease, sheds a wrinkle, wears year-round.",
     selvedge: "Super 130s · Biella · Italy",
-    weight: "280 g",
+    weight: "280\u00a0g",
     fromPrice: 240000,
     shades: [
       { id: "obsidian", name: "Obsidian", color: "#16171b" },
@@ -63,7 +63,7 @@ export const CLOTHS: Cloth[] = [
     name: "Cashmere",
     note: "Brushed pure cashmere. Soft shoulder, soft hand, warm without weight.",
     selvedge: "Pure Cashmere · Mongolia",
-    weight: "340 g",
+    weight: "340\u00a0g",
     fromPrice: 390000,
     shades: [
       { id: "camel", name: "Camel", color: "#a17a4d" },
@@ -77,7 +77,7 @@ export const CLOTHS: Cloth[] = [
     name: "Linen",
     note: "Open plain weave with honest slubs. Cool in heat and better for every crease.",
     selvedge: "Irish Linen · Co. Down",
-    weight: "310 g",
+    weight: "310\u00a0g",
     fromPrice: 210000,
     shades: [
       { id: "ivory", name: "Ivory", color: "#d6ccb8" },
@@ -91,7 +91,7 @@ export const CLOTHS: Cloth[] = [
     name: "Velvet",
     note: "Cotton velvet with a deep pile. Drinks light at the centre, glows at the edge.",
     selvedge: "Cotton Velvet · Como",
-    weight: "360 g",
+    weight: "360\u00a0g",
     fromPrice: 280000,
     shades: [
       { id: "jet", name: "Jet", color: "#101013" },

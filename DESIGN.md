@@ -38,7 +38,7 @@ This file is the source of truth. The tokens below are mirrored one-to-one in
 | `ash` | `#A8A398` | Secondary text, captions, helper copy. |
 | `gold` | `#C8A766` | The metal. Primary actions, selection, focus, links. |
 | `gold-hi` | `#E8D29C` | Highlight of the brushed gradient, hover state of gold text. |
-| `gold-deep` | `#8E7238` | Shadow of the brushed gradient. Never used for text. |
+| `gold-deep` | `#9A7E44` | Shadow of the brushed gradient. Never used for text. |
 | `ember` | `#E8907A` | Errors only. |
 
 ### Contrast (WCAG 2.1)
@@ -64,11 +64,12 @@ It is a three-stop gradient with a fine horizontal grain, not a flat fill:
 ```css
 background-image:
   repeating-linear-gradient(90deg, rgb(255 255 255 / 0.05) 0 1px, transparent 1px 3px),
-  linear-gradient(100deg, #8E7238 0%, #C8A766 28%, #E8D29C 50%, #C8A766 72%, #8E7238 100%);
+  linear-gradient(100deg, #9A7E44 0%, #C8A766 28%, #E8D29C 50%, #C8A766 72%, #9A7E44 100%);
 ```
 
-Text on brushed gold is `obsidian`. The darkest stop still gives 4.5 : 1; the
-label always sits over the lighter middle of the gradient.
+Text on brushed gold is `obsidian`. Even the darkest stop gives 5.2 : 1, and
+the label sits over the lighter middle of the gradient (8.9 : 1 and up). The
+pressed state dims by 5 % at most, which keeps the edge above 4.5 : 1.
 
 ## 3. Typography
 
@@ -123,22 +124,24 @@ Rules:
 
 | Token | Value | Use |
 | --- | --- | --- |
-| `ease-cut` | `cubic-bezier(0.2, 0.7, 0.1, 1)` | Entrances, drawers, step changes |
-| `ease-press` | `cubic-bezier(0.4, 0, 0.2, 1)` | Colour and opacity changes on hover/press |
-| `dur-quick` | `160ms` | Hover, press, focus |
+| `ease-cut` | `cubic-bezier(0.2, 0.7, 0.1, 1)` | Things that travel: drawers, dialogs, step changes, image zoom |
+| `ease-press` | `cubic-bezier(0.4, 0, 0.2, 1)` | Things that fade: backdrops, the hero poster |
 | `dur-move` | `420ms` | Drawers, dialogs, step transitions |
 
 - Animate `transform` and `opacity` only. Never `transition: all`.
+- Hover, press and selection change colour at once, with no transition. A cut
+  edge is sharp; so is the feedback.
 - The hero is scroll-linked through a spring (stiffness 90, damping 24), so it
   is always interruptible.
 - Under `prefers-reduced-motion: reduce` the hero becomes a static sequence:
   the suit holds its final pose and the chapters stack as ordinary sections.
-  Drawers and steps switch without travel.
+  Drawers and steps switch without travel; every transition and animation
+  duration collapses to zero.
 
 ## 6. Components
 
 **Primary button.** Brushed gold fill, `obsidian` label, 48 px tall, 2 px
-radius. Hover brightens; active dims. Label names the action
+radius. Hover brightens by 10 %; pressed dims by 5 %. Label names the action
 (“Add to Bag”, “Confirm Appointment”), never “Submit”.
 
 **Secondary button.** Transparent, 1 px `line-strong` border, `chalk` label.
@@ -204,6 +207,9 @@ marks, no superlatives about ourselves.
   in the tab order.
 - Every control is reachable and operable by keyboard. Dragging the suit has
   button equivalents (“Front”, “Side”, “Back”).
+- Interface text never sits on the 3D canvas where the cloth behind it can
+  change. Viewer controls have their own solid strip; the hero, whose suit is
+  always dark, adds a scrim under its text on narrow screens.
 - The 3D canvas is exposed as an image with a text description of the current
   configuration; changes are announced through a polite live region.
 - Dates, times and prices are formatted with `Intl`.

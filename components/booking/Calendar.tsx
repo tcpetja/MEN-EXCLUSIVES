@@ -23,12 +23,14 @@ const monthOf = (iso: string) => iso.slice(0, 7);
 export function Calendar({
   value,
   onChange,
+  today,
   min,
   max,
 }: {
   value: string | null;
   onChange: (iso: string) => void;
-  /** First and last bookable days, as ISO dates. `min` is today. */
+  /** Today, and the first and last bookable days, as ISO dates. */
+  today: string;
   min: string;
   max: string;
 }) {
@@ -47,14 +49,15 @@ export function Calendar({
   const weeks = Array.from({ length: cells.length / 7 }, (_, w) => cells.slice(w * 7, w * 7 + 7));
 
   const reason = (iso: string) => {
-    if (iso < min) return "in the past";
+    if (iso < today) return "in the past";
+    if (iso < min) return "too soon to book online";
     if (iso > max) return "not open for booking yet";
     if (!isOpenDay(dateFromISO(iso))) return "closed";
     return null;
   };
 
   const moveTo = (iso: string, focus = true) => {
-    const next = iso < min ? min : iso > max ? max : iso;
+    const next = iso < today ? today : iso > max ? max : iso;
     setCursor(next);
     if (focus) {
       // wait for the new month to render before moving focus into it
@@ -98,7 +101,7 @@ export function Calendar({
           type="button"
           className={iconButton}
           onClick={() => shiftMonth(-1, false)}
-          disabled={month <= monthOf(min)}
+          disabled={month <= monthOf(today)}
           aria-label="Previous month"
         >
           <ChevronLeftIcon />
@@ -142,16 +145,16 @@ export function Calendar({
                       tabIndex={iso === cursor ? 0 : -1}
                       aria-pressed={selected}
                       aria-disabled={why ? true : undefined}
-                      aria-current={iso === min ? "date" : undefined}
+                      aria-current={iso === today ? "date" : undefined}
                       aria-label={`${formatLongDate(iso)}${why ? `, ${why}` : ""}`}
                       onClick={() => {
                         setCursor(iso);
                         if (!why) onChange(iso);
                       }}
-                      className="tabular relative mx-auto flex aspect-square w-full max-w-12 min-h-11 items-center justify-center rounded-control border border-transparent text-body-sm text-chalk transition-[color,border-color,background-color] duration-150 ease-press hover:border-gold-hi aria-pressed:border-gold aria-pressed:bg-gold aria-pressed:font-semibold aria-pressed:text-obsidian aria-disabled:cursor-not-allowed aria-disabled:text-line-strong aria-disabled:line-through aria-disabled:hover:border-transparent"
+                      className="tabular relative mx-auto flex aspect-square w-full max-w-12 min-h-11 items-center justify-center rounded-control border border-transparent text-body-sm text-chalk hover:border-gold-hi aria-pressed:border-gold aria-pressed:bg-gold aria-pressed:font-semibold aria-pressed:text-obsidian aria-disabled:cursor-not-allowed aria-disabled:text-line-strong aria-disabled:line-through aria-disabled:hover:border-transparent"
                     >
                       {Number(iso.slice(8))}
-                      {iso === min && (
+                      {iso === today && (
                         <span aria-hidden="true" className="absolute bottom-1.5 size-1 rounded-full bg-current" />
                       )}
                     </button>

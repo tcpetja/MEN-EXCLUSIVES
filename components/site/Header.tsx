@@ -35,7 +35,7 @@ export function Header() {
                 <Link
                   href={item.href}
                   aria-current={isCurrent(item.href) ? "page" : undefined}
-                  className="type-label relative flex h-11 items-center px-4 text-[0.875rem] text-chalk transition-colors duration-150 ease-press hover:text-gold-hi aria-[current=page]:text-gold-hi aria-[current=page]:after:absolute aria-[current=page]:after:inset-x-4 aria-[current=page]:after:bottom-1.5 aria-[current=page]:after:h-px aria-[current=page]:after:bg-gold"
+                  className="type-label relative flex h-11 items-center px-4 text-[0.875rem] text-chalk hover:text-gold-hi aria-[current=page]:text-gold-hi aria-[current=page]:after:absolute aria-[current=page]:after:inset-x-4 aria-[current=page]:after:bottom-1.5 aria-[current=page]:after:h-px aria-[current=page]:after:bg-gold"
                 >
                   {item.label}
                 </Link>
